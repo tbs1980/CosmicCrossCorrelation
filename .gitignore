@@ -19,3 +19,8 @@
 *.exe
 *.out
 *.app
+
+#all the html files are not required
+*.html
+
+*.DS_Store
