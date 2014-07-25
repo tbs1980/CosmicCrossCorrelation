@@ -1,4 +1,4 @@
-Writing documentation with Markdown format
+Writing documentation with reStructuredText format
 ==========================================
 
 If you are familiar with `reStructuredText <http://docutils.sourceforge.net/rst.html>`_ then that is another option for writing the documentation.
