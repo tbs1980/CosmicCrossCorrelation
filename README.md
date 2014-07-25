@@ -55,8 +55,33 @@ Now you are ready to make changes to the repository. At any time you may check t
 
 	no changes added to commit (use "git add" and/or "git commit -a")
 
-If are ready to add these changes to the repo you can do that by the following commands
+If are ready to add these changes to the repo you can do that by the commands `git add` and `git commit`.
 
 	$ git add .
+	$ git status
+	On branch sree_testing_layout
+	Changes to be committed:
+	  (use "git reset HEAD <file>..." to unstage)
+
+		modified:   .gitignore
+		modified:   README.md
+		new file:   doc/README.md
+		new file:   minutes/2014_07_04.md
+
+As you can see git has listed the files that were modified. Now you can commit these changes to the repo. Please note that I add a detailed commit message so that we get a detailed log of what is happening.
+
+	$ git commit -m "First commit to my branch. Added minutes directorya and mintes from 7th July. Also added a doc directory to hold the documentation. "
+	[sree_testing_layout 1a07e22] First commit to my branch. Added minutes directorya and mintes from 7th July. Also added a doc directory to hold the documentation.
+	 4 files changed, 100 insertions(+), 4 deletions(-)
+	 rewrite README.md (99%)
+	 create mode 100644 doc/README.md
+	 create mode 100644 minutes/2014_07_04.md
+
+Now push these changes to the github repository so that everyone has access to the changes you made.
+
+	$ git push --set-upstream origin sree_testing_layout
+
+
+
 
 
