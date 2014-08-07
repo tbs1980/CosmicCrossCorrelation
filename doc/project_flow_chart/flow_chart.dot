@@ -1,0 +1,50 @@
+digraph cross_corr_flow_chart
+{
+	experiment[label="experiment",shape="Msquare"]
+	cat[label="catalogue",shape="ellipse"]
+	mask[label="mask",shape="ellipse"]
+
+	experiment -> cat
+	experiment -> mask
+
+	cat -> map_making
+	mask -> map_making
+
+	map_making[label="map-making",shape="box"]
+
+	gg[label="overdensity map",shape="egg"]	
+	ggNinv[label="overdensity N^-1  matrix",shape="egg"]
+
+	map_making -> gg
+	map_making -> ggNinv
+
+	cl_est[label="Cl Estimation",shape="box"]
+
+	gg -> cl_est
+	ggNinv -> cl_est
+
+	cl[label="Cl",shape="ellipse"]
+	cl_cov[label="Cl-cov-mat",shape="ellipse"]
+
+	cl_est -> cl
+	cl_est -> cl_cov
+
+	cosmos[label="cosmology",shape="trapezium"]
+	model[label="modelling
+	n(z),b(z) etc",shape="box"]
+	uclcl[label="UCLCl",shape="box"]
+	cl_pred[label="Predicted Cls",shape="ellipse"]
+	pliny[label="Pliny
+	Nested-Sampler",shape="box"]
+
+	cosmos -> uclcl
+	model -> uclcl -> cl_pred
+
+	cl -> pliny
+	cl_cov -> pliny
+	cl_pred -> pliny
+
+	params[label="Cosmological Parameters"]
+
+	pliny -> params
+}

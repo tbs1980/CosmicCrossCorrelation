@@ -4,3 +4,9 @@ Please check the help files for writing documentation at [Markdown](Markdown.md)
 
 The scinence documentation is below.
 
+## Outline of the project 
+
+An outline of the project as flow-chart is shown below.
+
+![Flow-chart](./project_flow_chart/flow_chart.png)
+
