@@ -27,14 +27,18 @@ catalogs. Their description and instructions on how to apply them are given in
 [Anderson et al. 2012](http://mnras.oxfordjournals.org/content/427/4/3435), in
 particular eq. (18):
 
-$w_{\rm tot} = w_{\rm FKP} w_{\rm sys} (w_{\rm rf} + w_{\rm cp} -1)$
+$$w_{\rm tot} = w_{\rm FKP} w_{\rm sys} (w_{\rm rf} + w_{\rm cp} -1)$$
 
 To summarize the meaning of each of these weights:
 
-   * $w_{\rm rf}$: bla
-   * $w_{\rm cp}$: bla
-   * $w_{\rm sys}$: bla
-   * $w_{\rm FKP}$: bla
+$$w_{\rm rf}$$
+bla
+$$w_{\rm cp}$$
+bla
+$$w_{\rm sys}$$
+bla
+$$w_{\rm FKP}$$
+bla
 
 **A point we need to discuss is which weights to use and why.** For a discussion
 on how to calculate the Poisson shot noise for weighted galaxies, see Appendix A
