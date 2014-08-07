@@ -10,3 +10,7 @@ An outline of the project as flow-chart is shown below.
 
 ![Flow-chart](./project_flow_chart/flow_chart.png)
 
+## Project calendar
+
+<iframe src="https://www.google.com/calendar/embed?src=n8aotpitt05ds5i9j9gidodc8c%40group.calendar.google.com&ctz=Europe/London" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+
