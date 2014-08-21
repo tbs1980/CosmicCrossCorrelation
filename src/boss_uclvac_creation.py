@@ -30,9 +30,9 @@ def main(infile, outdir):
     name, extension = (inname[:inname.find(".fits")],
                        inname[inname.find(".fits"):])
     outname = "".join([name + "_uclvac", extension])
-    os.path.join(outdir, outname)
+    outfile = os.path.join(outdir, outname)
     try:
-        boss.write(outname, format='fits')
+        boss.write(outfile, format='fits')
     except IOError as err:
         raise IOError(str(err) + "\nPlease remove previous version before " +
                       "creating a new one.")
@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     parser.add_argument('infile',
                         help="Path to input data")
-    parser.add_argument("-o", "--outdir",
+    parser.add_argument('-o', '--outdir',
                         default=".",
                         help="Output folder path")
 
