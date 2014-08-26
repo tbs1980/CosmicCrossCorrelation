@@ -5,7 +5,7 @@ import os
 import argparse
 
 
-def main(infile, outdir):
+def main(infile, sample, outdir):
     """
     fixme
 
@@ -15,7 +15,14 @@ def main(infile, outdir):
 
     # PART 1: Restrict to official DR10 redshift range
     redshift = boss['Z']
-    zrange = (redshift > 0.43) & (redshift < 0.7)
+    if sample == 'cmass':
+        zrange = (redshift > 0.43) & (redshift < 0.7)
+    elif sample == 'lowz':
+        zrange = (redshift > 0.15) & (redshift < 0.43)
+    else:
+        print "The sample chosen doesn't exist. Options are 'lowz' or 'cmass'."
+        sys.exit(1)
+
     boss = boss[zrange]
 
     # PART 2: Define and add w_tot column 
@@ -54,9 +61,11 @@ if __name__ == "__main__":
 
     parser.add_argument('infile',
                         help="Path to input data")
+    parser.add_argument('sample',
+                        help="BOSS sample of input catalog")
     parser.add_argument('-o', '--outdir',
                         default=".",
                         help="Output folder path")
 
     args = parser.parse_args()
-    main(args.infile, args.outdir)
+    main(args.infile, args.sample, args.outdir)
