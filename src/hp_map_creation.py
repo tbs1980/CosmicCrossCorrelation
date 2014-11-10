@@ -14,23 +14,27 @@ def apply_cuts(data, **kwargs):
     fixme-fixme-fixme
     """
     mask = np.ones(len(data), dtype=bool)
-
-    try:
-        for k, (low, upp) in kwargs.items():
-            if low is None:
-                low = '-inf'
-            if upp is None:
-                upp = 'inf'
-            mask = mask & ((data[k] >= float(low)) & (data[k] < float(upp)))
-    except TypeError:
-        raise TypeError("Each keyword value must be a 2d tuple or list of " +
+    
+    for field, cuts in kwargs.items():
+        fieldmask = np.zeros(len(data), dtype=bool)
+        try:
+            for low, upp in cuts:
+                if low is None:
+                    low = '-inf'
+                if upp is None:
+                    upp = 'inf'
+                fieldmask = fieldmask | ( (data[field] >= float(low)) &
+                                          (data[field] < float(upp)) )
+        except TypeError:
+            raise TypeError(field + " values must be a 2d tuple or list of " +
                         "numbers (int or float) or None.")
-    except ValueError:
-        raise ValueError("Each keyword value must be a 2d tuple or list of " +
+        except ValueError:
+            raise ValueError(field + "values must be a 2d tuple or list of " +
                         "numbers (int or float) or None.")
-    except KeyError:
-        raise KeyError("At least one of the fields is not present " +
+        except KeyError:
+            raise KeyError("At least one of the fields is not present " +
                        "in the catalog.")
+        mask = mask & fieldmask
 
     newdata = data[mask]
 
