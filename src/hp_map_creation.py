@@ -80,20 +80,36 @@ def hp_count_map(radecdata, nside, weights=None, nest=False):
     return countmap
 
 
-def hp_density_map(countmap):
+def hp_nbar(countmap):
+    """
+    """
+    nbar = np.mean(countmap[countmap > 0])
+
+    return nbar
+
+
+def hp_nbar_map(countmap, nbar=None):
+    """
+    Creates a Healpix map
+    """
+    if nbar is None:
+        nbar = np.mean(countmap[countmap > 0])
+    nbarmap = np.where(countmap > 0, nbar, 0)
+
+    return nbarmap
+
+
+def hp_density_map(countmap, nbar=None):
     """
     Creates a Healpix density map from a number count map
 
     fixme-fixme-fixme
     """
-    # Get mean count for non-zero pixels
-    nonzero = np.take(countmap, np.where(countmap != 0))[0]
-    nbar = np.mean(nonzero)
-
-    nbarmap = nbar*np.where(countmap != 0, 1, 0)
+    if nbar is None:
+        nbar = np.mean(countmap[countmap > 0])
     deltamap = countmap/nbar - 1
 
-    return deltamap, nbarmap
+    return deltamap
 
 
 def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
@@ -135,20 +151,21 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
             weight = None
 
         # Create maps
-        countmap = hp_count_map(radec, nside, weights=weight)
-        densitymap, nbarmap = hp_density_map(countmap)
+        weighted_counts = hp_count_map(radec, nside, weights=weight)
+        raw_counts = hp_count_map(radec, nside)
+
+        densitymap = hp_density_map(weighted_counts)
+        nbarmap = hp_nbar_map(raw_counts)
 
         # Define output names
         if not os.path.isdir(outdir):
             print "The output dir doesn't exist. Saving to current dir."
             outdir = os.getcwd()
         suffix = "_N" + str(nside) + zname
-        outcnt = os.path.join(outdir, "counts" + suffix +".fits")
         outdens = os.path.join(outdir, "density" + suffix +".fits")
         outmean = os.path.join(outdir, "nbar" + suffix +".fits")
 
         # Save outputs
-        hp.write_map(outcnt, countmap)
         hp.write_map(outdens, densitymap)
         hp.write_map(outmean, nbarmap)
 
