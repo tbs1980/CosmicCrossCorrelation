@@ -158,9 +158,12 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
         nbarmap = hp_nbar_map(raw_counts)
 
         # Define output names
-        if not os.path.isdir(outdir):
-            print "The output dir doesn't exist. Saving to current dir."
-            outdir = os.getcwd()
+        try:
+            os.mkdir(outdir)
+        except OSError:
+            if not os.path.isdir(path):
+                raise
+
         suffix = "_N" + str(nside) + zname
         outdens = os.path.join(outdir, "density" + suffix +".fits")
         outmean = os.path.join(outdir, "nbar" + suffix +".fits")
