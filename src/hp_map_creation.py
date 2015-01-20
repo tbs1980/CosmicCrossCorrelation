@@ -80,38 +80,6 @@ def hp_count_map(radecdata, nside, weights=None, nest=False):
     return countmap
 
 
-def hp_nbar(countmap):
-    """
-    """
-    nbar = np.mean(countmap[countmap > 0])
-
-    return nbar
-
-
-def hp_nbar_map(countmap, nbar=None):
-    """
-    Creates a Healpix map
-    """
-    if nbar is None:
-        nbar = np.mean(countmap[countmap > 0])
-    nbarmap = np.where(countmap > 0, nbar, 0)
-
-    return nbarmap
-
-
-def hp_density_map(countmap, nbar=None):
-    """
-    Creates a Healpix density map from a number count map
-
-    fixme-fixme-fixme
-    """
-    if nbar is None:
-        nbar = np.mean(countmap[countmap > 0])
-    deltamap = countmap/nbar - 1
-
-    return deltamap
-
-
 def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
     """
     fixme
@@ -150,27 +118,21 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
         else:
             weight = None
 
-        # Create maps
+        # Create weighted count maps
         weighted_counts = hp_count_map(radec, nside, weights=weight)
-        raw_counts = hp_count_map(radec, nside)
-
-        densitymap = hp_density_map(weighted_counts)
-        nbarmap = hp_nbar_map(raw_counts)
 
         # Define output names
         try:
             os.mkdir(outdir)
         except OSError:
-            if not os.path.isdir(path):
+            if not os.path.isdir(outdir):
                 raise
 
         suffix = "_N" + str(nside) + zname
-        outdens = os.path.join(outdir, "density" + suffix +".fits")
-        outmean = os.path.join(outdir, "nbar" + suffix +".fits")
+        outcounts = os.path.join(outdir, "weighted_counts" + suffix +".fits")
 
         # Save outputs
-        hp.write_map(outdens, densitymap)
-        hp.write_map(outmean, nbarmap)
+        hp.write_map(outcounts, weighted_counts)
 
     return None
 
