@@ -68,9 +68,8 @@ def hp_count_map(radecdata, nside, weights=None, nest=False):
     assert hp.isnsideok(nside), "nside must be a power of 2"
 
     # Assign each galaxy to a Healpix pixel
-    deg2rad = np.pi/180
-    theta = deg2rad*(90.0 - radecdata[:, 1])
-    phi = deg2rad*radecdata[:, 0]
+    theta = np.deg2rad(90.0 - radecdata[:, 1])
+    phi = np.deg2rad(radecdata[:, 0])
     gal_hppix = hp.ang2pix(nside, theta=theta, phi=phi, nest=nest)
 
     # Create Healpix count map
@@ -109,6 +108,13 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
         datalist = [data]
         zsuffix = [""]
 
+    # Create output folder
+    try:
+        os.mkdir(outdir)
+    except OSError:
+        if not os.path.isdir(outdir):
+            raise
+
     # Create maps for all bins
     for (newdata, zname) in zip(datalist, zsuffix):
         # Select fields
@@ -122,12 +128,6 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
         weighted_counts = hp_count_map(radec, nside, weights=weight)
 
         # Define output names
-        try:
-            os.mkdir(outdir)
-        except OSError:
-            if not os.path.isdir(outdir):
-                raise
-
         suffix = "_N" + str(nside) + zname
         outcounts = os.path.join(outdir, "weighted_counts" + suffix +".fits")
 
