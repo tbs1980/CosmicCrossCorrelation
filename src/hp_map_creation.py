@@ -68,9 +68,8 @@ def hp_count_map(radecdata, nside, weights=None, nest=False):
     assert hp.isnsideok(nside), "nside must be a power of 2"
 
     # Assign each galaxy to a Healpix pixel
-    deg2rad = np.pi/180
-    theta = deg2rad*(90.0 - radecdata[:, 1])
-    phi = deg2rad*radecdata[:, 0]
+    theta = np.deg2rad(90.0 - radecdata[:, 1])
+    phi = np.deg2rad(radecdata[:, 0])
     gal_hppix = hp.ang2pix(nside, theta=theta, phi=phi, nest=nest)
 
     # Create Healpix count map
@@ -78,22 +77,6 @@ def hp_count_map(radecdata, nside, weights=None, nest=False):
     countmap = np.bincount(gal_hppix, weights=weights, minlength=npix)
 
     return countmap
-
-
-def hp_density_map(countmap):
-    """
-    Creates a Healpix density map from a number count map
-
-    fixme-fixme-fixme
-    """
-    # Get mean count for non-zero pixels
-    nonzero = np.take(countmap, np.where(countmap != 0))[0]
-    nbar = np.mean(nonzero)
-
-    nbarmap = nbar*np.where(countmap != 0, 1, 0)
-    deltamap = countmap/nbar - 1
-
-    return deltamap, nbarmap
 
 
 def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
@@ -125,6 +108,13 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
         datalist = [data]
         zsuffix = [""]
 
+    # Create output folder
+    try:
+        os.mkdir(outdir)
+    except OSError:
+        if not os.path.isdir(outdir):
+            raise
+
     # Create maps for all bins
     for (newdata, zname) in zip(datalist, zsuffix):
         # Select fields
@@ -134,23 +124,15 @@ def main(infile, nside, raname, decname, wname, zname, zbins, cuts, outdir):
         else:
             weight = None
 
-        # Create maps
-        countmap = hp_count_map(radec, nside, weights=weight)
-        densitymap, nbarmap = hp_density_map(countmap)
+        # Create weighted count maps
+        weighted_counts = hp_count_map(radec, nside, weights=weight)
 
         # Define output names
-        if not os.path.isdir(outdir):
-            print "The output dir doesn't exist. Saving to current dir."
-            outdir = os.getcwd()
         suffix = "_N" + str(nside) + zname
-        outcnt = os.path.join(outdir, "counts" + suffix +".fits")
-        outdens = os.path.join(outdir, "density" + suffix +".fits")
-        outmean = os.path.join(outdir, "nbar" + suffix +".fits")
+        outcounts = os.path.join(outdir, "weighted_counts" + suffix +".fits")
 
         # Save outputs
-        hp.write_map(outcnt, countmap)
-        hp.write_map(outdens, densitymap)
-        hp.write_map(outmean, nbarmap)
+        hp.write_map(outcounts, weighted_counts)
 
     return None
 
